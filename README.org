@@ -1,0 +1,35 @@
+* georg
+
+  Georg, a project named after quickly skimming over the wikipedia entry for Faust, is a journey in understanding the tensions and tradeoffs in creative tooling.
+
+  In its initial form, its mostly a 'hello noise signal' example of building an executable that you can connect over slime (via ECL) and play a noise (via jackaudio (via faust).
+
+  My plan is to make some lisp veneers for generating faust syntax, put a wig over my laptop, and manage said laptop as a music act.
+
+* build
+
+  There is a nix file within the cxx folder. If you have nixpkgs installed, calling nix-shell within that directory and `make`ing will build an executable called `kiss`.
+
+* run
+
+  Starting the executable will start a swank repl. I currently use emacs slime to connect to said repl. Look at `scratch.lisp` for an example of the exposed commands.
+
+* dev
+
+  NOTE: I am currently experimenting with using [[https://github.com/kiselgra/c-mera][c-mera]] and [[https://github.com/kiselgra/cm-ifs][cm-ifs]] to generate CC files. To make matters more annoying, I have built my own patch on c-mera that exposes a couple other lisp systems for use when generating files.
+
+  If you want to dev against the lisp, you need to build c-mera exposed with [[https://github.com/kiselgra/cm-ifs][cm-ifs]] and metabang-bind  and line it up with your PATH environment. I am fully aware this is janky and will work to make things more uniform in future commits.
+
+  In that vein, for simplicity's sake, I am committing the generated files along with the lisp code used to generate it.
+
+* about pieces
+**  FAUST:
+  [[http://faust.grame.fr/about/][Faust Lang]]
+  #+BEGIN_SRC quote
+  FAUST (Functional Audio Stream) is a functional programming language specifically designed for real-time signal processing and synthesis. FAUST targets high-performance signal processing applications and audio plug-ins for a variety of platforms and standards.
+    #+END_SRC
+** Embedded Common Lisp
+    [[https://common-lisp.net/project/ecl/main.html][ECL]]
+    #+BEGIN_SRC quote
+  ECL (Embeddable Common-Lisp) is an interpreter of the Common-Lisp language as described in the X3J13 Ansi specification, featuring CLOS (Common-Lisp Object System), conditions, loops, etc, plus a translator to C, which can produce standalone executables.
+  #+END_SRC
