@@ -3,6 +3,11 @@
 (include <faust/dsp/dsp.h>)
 (include <faust/dsp/llvm-dsp.h>)
 (include <faust/audio/jack-dsp.h>)
+;; (include <faust/midi/jack-midi.h>)
+
+;; (include <faust/midi/rt-midi.h>)
+;; (include <faust/midi/RtMidi.cpp>)
+
 (include <ecl/ecl.h>)
 (include "ecl-helpers.h")
 

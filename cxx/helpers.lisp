@@ -13,7 +13,7 @@ It is ugly code with tremendous personality that will blossom later in life.
 (defvar *ecl-wrapper-exprs* nil)
 
 (defun symbolicate (&rest syms)
-  (intern (format nil "~{~a~}" syms) :keyword))
+  (intern (format nil "|~{~a~}|" syms) :keyword))
 
 (defmacro c-to-cl (name fun arg-count)
   `(funcall cl_def_c_function
@@ -21,8 +21,10 @@ It is ugly code with tremendous personality that will blossom later in life.
             (cast cl_objectfn_fixed ,fun)
             ,arg-count))
 
-(defun need-to-provider (arg-pair)
 
+(defun need-to-provider (arg-pair)
+  ;; need a cleaner interface for getting the
+  ;; c type to pattern match on
   (case (second (first (last (first arg-pair))))
 
     ((string)

@@ -16,7 +16,7 @@ namespace faust
 		audio.init("booboo");
 	}
 
-	cl_object ECL_INIT_JACK()
+	cl_object _ECL_INIT_JACK_()
 	{
 		init_jack();
 		return ecl_make_integer(0);
@@ -31,7 +31,7 @@ namespace faust
 		DSP = dsp_factory->createDSPInstance();
 	}
 
-	cl_object ECL_STR_TO_DSP(cl_object dsp_str)
+	cl_object _ECL_STR_TO_DSP_(cl_object dsp_str)
 	{
 		str_to_dsp(ecl_helpers::cl_str_to_str(dsp_str));
 		return ecl_make_integer(0);
@@ -42,7 +42,7 @@ namespace faust
 		audio.setDsp(DSP);
 	}
 
-	cl_object ECL_CONNECT_DSP()
+	cl_object _ECL_CONNECT_DSP_()
 	{
 		connect_dsp();
 		return ecl_make_integer(0);
@@ -53,7 +53,7 @@ namespace faust
 		audio.start();
 	}
 
-	cl_object ECL_PLAY()
+	cl_object _ECL_PLAY_()
 	{
 		play();
 		return ecl_make_integer(0);
@@ -64,7 +64,7 @@ namespace faust
 		audio.stop();
 	}
 
-	cl_object ECL_STOP()
+	cl_object _ECL_STOP_()
 	{
 		stop();
 		return ecl_make_integer(0);
@@ -72,10 +72,10 @@ namespace faust
 
 	void load_ecl_bindings()
 	{
-		cl_def_c_function(c_string_to_object("ecl-stop"), ((cl_objectfn_fixed)ECL_STOP), 0);
-		cl_def_c_function(c_string_to_object("ecl-play"), ((cl_objectfn_fixed)ECL_PLAY), 0);
-		cl_def_c_function(c_string_to_object("ecl-connect-dsp"), ((cl_objectfn_fixed)ECL_CONNECT_DSP), 0);
-		cl_def_c_function(c_string_to_object("ecl-str-to-dsp"), ((cl_objectfn_fixed)ECL_STR_TO_DSP), 1);
-		cl_def_c_function(c_string_to_object("ecl-init-jack"), ((cl_objectfn_fixed)ECL_INIT_JACK), 0);
+		cl_def_c_function(c_string_to_object("|ecl-stop|"), ((cl_objectfn_fixed)_ECL_STOP_), 0);
+		cl_def_c_function(c_string_to_object("|ecl-play|"), ((cl_objectfn_fixed)_ECL_PLAY_), 0);
+		cl_def_c_function(c_string_to_object("|ecl-connect-dsp|"), ((cl_objectfn_fixed)_ECL_CONNECT_DSP_), 0);
+		cl_def_c_function(c_string_to_object("|ecl-str-to-dsp|"), ((cl_objectfn_fixed)_ECL_STR_TO_DSP_), 1);
+		cl_def_c_function(c_string_to_object("|ecl-init-jack|"), ((cl_objectfn_fixed)_ECL_INIT_JACK_), 0);
 	}
 }

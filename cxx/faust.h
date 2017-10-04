@@ -14,23 +14,23 @@ namespace faust
 
 	void init_jack();
 
-	cl_object ECL_INIT_JACK();
+	cl_object _ECL_INIT_JACK_();
 
 	void str_to_dsp(std::string dsp_str);
 
-	cl_object ECL_STR_TO_DSP(cl_object dsp_str);
+	cl_object _ECL_STR_TO_DSP_(cl_object dsp_str);
 
 	void connect_dsp();
 
-	cl_object ECL_CONNECT_DSP();
+	cl_object _ECL_CONNECT_DSP_();
 
 	void play();
 
-	cl_object ECL_PLAY();
+	cl_object _ECL_PLAY_();
 
 	void stop();
 
-	cl_object ECL_STOP();
+	cl_object _ECL_STOP_();
 
 	void load_ecl_bindings();
 }
