@@ -7,23 +7,38 @@
  (asdf/system:system-relative-pathname :swank "start-swank.lisp")
  :verbose t)
 
-(DEFUN SHEN ()
-    (FORMAT T "~%~%Call (exit-shen) for leaving the Shen toplevel.~%~%")
-    (FINISH-OUTPUT)
-    (CATCH 'EXIT-SHEN
-      (|shen.shen|)))
+(defun set-shen-interactive! (stream)
+   ;; (|shen.initialise_environment|)
+  (labels ((read-stream ()
+             (let* ((input-str (gray:stream-read-line stream))
+                    (input-octets-vec (swank/backend:string-to-utf8 input-str))
+                    (input-octets
+                     (map 'list #'identity input-octets-vec))
+                    (compiled-line
+                     (|compile| #'(LAMBDA (X) (|shen.<st_input>| X)) input-octets
+                                #'(LAMBDA (E) '|shen.nextline|)))
+                    (line-read (|@p| compiled-line input-octets)))
+               line-read)))
 
-(ext:chdir "/home/jmsb/exps/langs/lisp/common/scratch/music/faust-riffs/ecl")
-;; (SETF (READTABLE-CASE *READTABLE*) :PRESERVE)
+    (setf |shen.*interactive-input*| #'read-stream)))
+
+(load "../shen-swank.lisp")
+
+(ext:chdir "/home/jmsb/exps/langs/lisp/common/scratch/music/georg/ecl")
+
 (defvar |*language*| "Common Lisp")
 (defvar |*implementation*| "ECL")
 (defvar |*port*| 2.1)
 (defvar |*porters*| "Mark Tarver")
-(PROCLAIM '(OPTIMIZE (DEBUG 0) (SPEED 3) (SAFETY 0)))
+(defvar |*shen.interactive-input*| (lambda ()))
+
+(PROCLAIM '(OPTIMIZE (DEBUG 0) (SPEED 3) (SAFETY 3)))
 (DEFCONSTANT COMPILED-SUFFIX ".fas")
 (DEFCONSTANT OBJECT-SUFFIX ".o")
 (DEFCONSTANT NATIVE-PATH "./ecl/")
-(EXT:INSTALL-C-COMPILER)
+;; (EXT:INSTALL-C-COMPILER)
+
+
 
 (DEFPARAMETER *SHEN-READTABLE* (LET ((RT (COPY-READTABLE NIL)))
                                  (SETF (READTABLE-CASE RT) :PRESERVE)
@@ -31,22 +46,11 @@
 (let ((*READTABLE* *SHEN-READTABLE*))
 
 
-  (DEFUN translate-kl (KlCode)
-    (MAPCAR #'(LAMBDA (X) (shen.kl-to-lisp NIL X)) KlCode))
 
-  (DEFUN write-lsp-file (File Code)
-    (WITH-OPEN-FILE
-        (Out File
-             :DIRECTION         :OUTPUT
-             :IF-EXISTS         :SUPERSEDE
-             :IF-DOES-NOT-EXIST :CREATE)
-      (FORMAT Out "~%")
-      (MAPC #'(LAMBDA (X) (FORMAT Out "~S~%~%" X)) Code)
-      File))
 
   (load "primitives.fas")
   (load "backend.fas")
-  (load "toplevel.lsp")
+  (load "toplevel.fas")
   (load "core.fas")
   (load "sys.fas")
   (load "sequent.fas")
@@ -58,14 +62,9 @@
   (load "writer.fas")
   (load "macros.fas")
   (load "declarations.fas")
-  (load "types.lsp")
+  (load "types.fas")
   (load "t-star.fas")
   (load "overwrite.fas")
 
   (DEFUN |exit-shen| ()
     (THROW 'EXIT-SHEN NIL)))
-
-
-(DEFUN |stinput| () swank-repl::*standard-input*)
-(DEFUN |stoutput| () |*stoutput*|)
-(DEFUN |sterror| () |*sterror*|)
