@@ -4,22 +4,15 @@
 (in-package :shen-swank)
 
 (defun shen-eval (input)
-  (cl-user::|shen.toplevel_interactive|
-   (cl-user::|read-from-string| input)))
+  (cl-user::|shen.interactive-evaluate|
+            (cl-user::|@p|
+                      (cl-user::|read-from-string| input)
+                      (cl-user::|map| #'(LAMBDA (X) (cl-user::|string->n| X)) (cl-user::|explode| input))
+                      )))
 
 (swank::defslimefun slime-interactive-eval-shen (input)
+  (format nil "~A" 'life)
   (shen-eval input))
-
-
-(defun swank-pprint (values)
-  "Bind some printer variables and pretty print each object in VALUES."
-  (swank::with-buffer-syntax ()
-    (swank::with-bindings *swank-pprint-bindings*
-      (cond ((null values) "; No value")
-            (t (with-output-to-string (*standard-output*)
-                 (dolist (o values)
-                   (pprint o)
-                   (terpri))))))))
 
 (swank::defslimefun pprint-eval-shen (input)
   (swank::with-buffer-syntax ()

@@ -1,218 +1,76 @@
-(tc +)
-
 (datatype globals
-
-  ________________________________
-  (value *statement-ops*) : (list symbol);
-  ________________________________
-  (value *el-ops*) : (list symbol);
-
-  ___________________________________________
-  (value *block-diagram-ops*) : (list symbol);
-
-  _________________________________________
-  (value *signal-type-ops*) : (list symbol);
-
   _______________________________________________
-  (value *signal-comparison-ops*) : (list symbol);)
+  emit-expression : (georg-expression --> string);
 
-(set *statement-ops*
-      [definition
-       file-import
-       declaration
-       documentation])
+  _____________________________________________________________________
+  emit-expression* : (georg-identifier --> georg-expression --> string);)
 
-(set *el-ops*
-      [add
-       subtract
-       multiply
-       divide
-       exponentiate
-       cut
-       modulo
-       delay-one
-       delay])
-
-(set *block-diagram-ops*
-      [in-series
-       in-parallel
-       split
-       merge
-       recurse])
-
-(set *signal-type-ops*
-      [int
-       float])
-
-(set *signal-comparison-ops*
-      [less-than
-       less-than-equal
-       greater-than
-       greater-than-equal
-       equal
-       not-equal])
-
-(datatype statement-op
-  if (element? X (value *statement-ops*))
-  _________________
-  X : statement-op;)
-
-(datatype el-op
-
-  if (element? X (value *el-ops*))
-  __________
-  X : el-op;)
-
-(datatype block-diagram-op
-
-  if (element? X (value *block-diagram-ops*))
-  _____________________
-  X : block-diagram-op;)
-
-(datatype signal-type-op
-  if (element? X (value *signal-type-ops*))
-  ___________________
-  X : signal-type-op;)
-
-(datatype signal-comparison-op
-  if (element? X (value *signal-comparison-ops*))
-  __________________________
-  X : signal-comparison-op;)
-
-(datatype georg-op
-
-  X : block-diagram-op >> Y : A;
-  ______________________________
-  [georg-op X] : georg-op >> Y : A;
-
-  X : block-diagram-op;
-  ____________________
-  [georg-op X] : georg-op;
-
-  X : el-op >> Y : A;
-  ________________________________
-  [georg-op X] : georg-op >> Y : A;
-
-  X : el-op;
-  ________________________
-  [georg-op X] : georg-op;
-
-  X : signal-type-op >> Y : A;
-  ________________________________
-  [georg-op X] : georg-op >> Y : A;
-
-  X : signal-type-op;
-  _______________________
-  [georg-op X] : georg-op;
-
-  X : signal-comparison-op >> Y : A;
-  __________________________________
-  [georg-op X] : georg-op >> Y : A;
-
-  X : signal-comparison-op;
-  _________________________
-  [georg-op X] : georg-op;
-  )
-
-
-(datatype prefix
-  __________________________________
-  (value *prefix*) : (list georg-op);)
-
-(set *prefix*
-      [[georg-op in-series]
-       [georg-op in-parallel]
-       [georg-op add]
-       [georg-op multiply]])
-
-(datatype georg-ref
-  X : georg-op; !;
-  _______________
-  X : georg-ref;
-
-  X : symbol; !;
-  ______________
-  X : georg-ref;
-
-  X : symbol >> P; !;
-  ___________________
-  X : georg-ref >> P;)
+(datatype georg-identifier
+  X : symbol;
+  ====================
+  X : georg-identifier;)
 
 (datatype georg-term
 
-  X : georg-ref; !;
-  ________________
+  X : georg-identifier;
+  _____________________
   X : georg-term;
 
-  X : number; !;
+  X : number;
   _______________
   X : georg-term;)
 
 (datatype georg-expression
 
-  Georg-expr0 : georg-expression;
-  Georg-expr1 : georg-expression;
-  ===================================================
-  [Georg-expr0 Georg-expr1] : georg-expression;
+  Expression : (list georg-expression); !;
+  ________________________________________
+  Expression : georg-expression;
 
-  Georg-op : georg-ref;
-  Georg-lhs : georg-expression;
-  Georg-rhs : georg-expression;
-  ===================================================
-  [Georg-lhs Georg-op Georg-rhs] : georg-expression;
+  Expression : (list georg-expression) >> P; !;
+  _____________________________________________
+  Expression : georg-expression >> P;
 
-  Georg-op : georg-ref;
-  Georg-lhs : georg-expression;
-  Georg-rhs : georg-expression;
-  ===================================================
-  [Georg-op Georg-lhs Georg-rhs] : georg-expression;
+  Expression : georg-expression; !;
+  Expressions : (list georg-expression); !;
+  ______________________________________________
+  [Expression | Expressions] : georg-expression;
 
+  Expression : georg-expression >> P; !;
+  Expressions : (list georg-expression) >> P; !;
+  ___________________________________________________
+  [Expression | Expressions] : georg-expression >> P;
 
-  GE : (list georg-expression);
-  _____________________________
-  GE : georg-expression;
+  Operator : georg-identifier;
+  Operands : (list georg-expression);
+  ==============================================
+  [p Operator | Operands] : georg-expression;
 
-  GE : georg-expression; GEs : (list georg-expression);
-  ===================================================
-  [GE | GEs] : georg-expression;
+  Operator : georg-identifier;
+  Operands : (list georg-expression);
+  ==============================================
+  [in Operator | Operands] : georg-expression;
 
-  GEs0 : georg-expression; GEs1 : georg-expression;
-  ===================================================
-  [GEs1 | GEs0] : georg-expression;
-
-
-
-
-  X : georg-term; !;
-  ____________________
+  X : georg-term;
+  ______________________________________________
   X : georg-expression;
 
-  _____________________
+  __________________________________
   [] : georg-expression;
 
-  )
+  Terms : (list georg-term);
+  ===============================================
+  Terms : georg-expression;
 
-(datatype verified-types
-  ________________________________________
-  (symbol? Var) : verified >> Var : symbol;
-
-  _____________________________________
-  (number? N) : verified >> N : number;
-
-  L : (list A);
-  ___________________________________
-  (element? X L) : verified >> X : A;)
-
-
-\* bitwise operations for integer signals *\
-\* foreign constants & variables *\
-\* foreign functions *\
+  Term : georg-term;
+  Terms : (list georg-term);
+  ==================================
+  [Term | Terms] : georg-expression;)
 
 (define georg-op->faust-expr
-  {georg-term --> string}
-  add -> "sum"
+  {georg-identifier --> string}
+  add -> "+"
   subtract -> "-"
-  multiply -> "prod"
+  multiply -> "*"
   divide -> "/"
   exponentiate -> "pow"
   cut -> "!"
@@ -221,7 +79,7 @@
   delay -> "@"
   in-series -> "seq"
   in-parallel -> "par"
-  plit -> "<:"
+  split -> "<:"
   merge -> ":>"
   recurse -> "~"
   less-than -> "<"
@@ -230,74 +88,97 @@
   greater-than-equal -> ">="
   equal -> "=="
   not-equal -> "!="
-  X -> (make-string "!~A" X))
-
-
-(define fix-pass
-  {georg-expression --> georg-expression}
-
-  [Op X Y] -> [Op (fix-pass X) (fix-pass Y)] where (element?
-                                                    Op
-                                                    (type [in-series
-                                                           in-parallel
-                                                           add
-                                                           multiply]
-                                                          (list georg-term)))
-
-  [Op X Y] -> [(fix-pass X) Op (fix-pass Y)] where (symbol? Op)
-  [X | Y] -> [(fix-pass X) | (fix-pass Y)]
-  X -> X)
-
-(define assignment-pass
-  {georg-expression --> georg-expression}
-  [let [Lhs Rhs]] -> [Lhs = Rhs]
-  [Lhs Rhs] -> [(assignment-pass Lhs)
-                (assignment-pass Rhs)]
-
-  [X | Y] -> [(assignment-pass X) | (assignment-pass Y)]
-
-  X -> X)
-
-(define emit-faust
-  {georg-expression --> string}
-  [Op Arg] -> (make-string "~A(~A)" Op Arg) where (symbol? Op)
-  [X = Y] -> (make-string "~A ~A ~A; ~%"
-                          (emit-faust X)
-                          =
-                          (emit-faust Y))
-
-  [Op X Y] -> (make-string "~A(~A, ~A)"
-                           (georg-op->faust-expr Op)
-                           (emit-faust X)
-                           (emit-faust Y)) where (element?
-                                                  Op
-                                                  (type [in-series
-                                                         in-parallel
-                                                         add
-                                                         multiply]
-                                                        (list georg-term)))
-
-  [X Op Y] -> (make-string "~A ~A ~A"
-                           (emit-faust X)
-                           (georg-op->faust-expr Op)
-                           (emit-faust Y)) where (symbol? Op)
-
-  [Expr | Exprs] -> (@s (emit-faust Expr)
-                        (emit-faust Exprs))
-
-
-
-
-  [] -> ""
+  comma -> " ,"
   X -> (make-string "~A" X))
 
+(datatype georg-definition
 
-(declare ecl-str-to-dsp [string --> number])
+  Package : string;
+  ______________________________________________
+  [import Package] : georg-definition;
 
-(ecl-str-to-dsp
- (emit-faust
-  (assignment-pass
-   (fix-pass
-    [\* [let [random [recurse [add 12345 _] [multiply 1103515245 _]]]] *\
-     \* [let [noise [divide random [float 2147483647]]]] *\
-     [let [process 1]]]))))
+  Identifier : symbol;
+  Expression : georg-expression;
+  ===============================================
+  [let Identifier Expression] : georg-definition;
+
+  Identifier : symbol;
+  Parameters : (list georg-term);
+  Expression : georg-expression;
+  =============================================================
+  [flet Identifier [Parameters Expression]] : georg-definition;
+
+  _____________________________________
+  [] : georg-definition;
+
+  GeorgDefs : (list georg-definition);
+  ____________________________
+  GeorgDefs : georg-definition;
+
+
+  GeorgDefs : (list georg-definition) >> P; !;
+  ____________________________________________
+  GeorgDefs : georg-definition >> P;
+
+  \* GeorgDef : georg-definition; *\
+  \* GeorgDefs : (list georg-definition); *\
+  \* ==================================== *\
+  \* [GeorgDef | GeorgDefs] : georg-definition; *\
+  )
+
+(define emit-expression
+  {georg-expression --> string}
+
+  [declare Key Value] -> (make-string "declare ~A ~S;~%" Key Value)
+
+  [p Op | Operands] -> (make-string "~A(~A)"
+                                        (georg-op->faust-expr Op)
+                                        (emit-expression* comma Operands))
+  [in Op | Operands] -> (emit-expression* Op Operands)
+
+  [GeorgTerm | GeorgTerms] -> (@s (emit-expression GeorgTerm)
+                                  (emit-expression GeorgTerms))
+
+  [] -> ""
+
+  X -> (make-string "~A" X))
+
+(define emit-expression*
+  {georg-identifier --> georg-expression --> string}
+  _ [] -> ""
+
+  Sep [Term | []] -> (emit-expression Term)
+
+  Sep [Term | Terms] -> (if (= Sep comma)
+                            (@s
+                             (emit-expression Term)
+                             ","
+                             (emit-expression* comma Terms))
+                            (@s
+                             (emit-expression Term)
+                             " "
+                             (georg-op->faust-expr Sep)
+                             " "
+                             (emit-expression* Sep
+                                               Terms))))
+
+
+
+(define emit-definition
+  {georg-definition --> string}
+
+  [import Package] -> (make-string "import(~S);~%" Package)
+
+  [let Id Expr] -> (make-string "~A = ~A;~%"
+                                Id
+                                (emit-expression  Expr))
+
+  [flet Id [Params Expr]] -> (make-string "~A(~A) = ~A;"
+                                          Id
+                                          (emit-expression* comma Params)
+                                          (emit-expression Expr))
+
+  [Def | Defs] -> (@s (emit-definition Def)
+                      (emit-definition Defs))
+
+  [] -> "")
