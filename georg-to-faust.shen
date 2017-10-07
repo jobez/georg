@@ -12,59 +12,63 @@
 
 (datatype georg-term
 
-  X : georg-identifier;
+  X : georg-identifier; !;
   _____________________
   X : georg-term;
 
-  X : number;
+  X : number; !;
   _______________
   X : georg-term;)
 
 (datatype georg-expression
 
-  Expression : (list georg-expression); !;
-  ________________________________________
-  Expression : georg-expression;
-
-  Expression : (list georg-expression) >> P; !;
-  _____________________________________________
-  Expression : georg-expression >> P;
-
-  Expression : georg-expression; !;
-  Expressions : (list georg-expression); !;
-  ______________________________________________
-  [Expression | Expressions] : georg-expression;
-
-  Expression : georg-expression >> P; !;
-  Expressions : (list georg-expression) >> P; !;
-  ___________________________________________________
-  [Expression | Expressions] : georg-expression >> P;
-
-  Operator : georg-identifier;
-  Operands : (list georg-expression);
-  ==============================================
-  [p Operator | Operands] : georg-expression;
-
-  Operator : georg-identifier;
-  Operands : (list georg-expression);
-  ==============================================
-  [in Operator | Operands] : georg-expression;
-
-  X : georg-term;
-  ______________________________________________
-  X : georg-expression;
-
-  __________________________________
+  ______________________
   [] : georg-expression;
 
-  Terms : (list georg-term);
-  ===============================================
+  Expressions : (list georg-expression); !;
+  _________________________________________
+  Expressions : georg-expression;
+
+  Expressions : (list georg-expression) >> P; !;
+  _________________________________________
+  Expressions : georg-expression >> P;
+
+  Operator : georg-identifier;
+  Operands : (list georg-expression); !;
+  ___________________________________________
+  [p Operator | Operands] : georg-expression;
+
+  Operator : georg-identifier,
+  Operands : (list georg-expression) >> P; !;
+  _______________________________________________
+  [p Operator | Operands] : georg-expression >> P;
+
+  X : georg-term; !;
+  ____________________
+  X : georg-expression;
+
+  X : georg-term >> P; !;
+  __________________________
+  X : georg-expression >> P;
+
+  Terms : (list georg-term); !;
+  _________________________
   Terms : georg-expression;
 
-  Term : georg-term;
-  Terms : (list georg-term);
-  ==================================
-  [Term | Terms] : georg-expression;)
+  Operator : georg-identifier;
+  Operands : (list georg-expression); !;
+  _________________________________________________
+  [in Operator | Operands] : georg-expression;
+
+  Operator : georg-identifier,
+  Operands : (list georg-expression) >> P; !;
+  _________________________________________________
+  [in Operator | Operands] : georg-expression >> P;
+
+  Integer : number;
+  Fractional : number;
+  ==============================================
+  [f Integer Fractional] : georg-expression;)
 
 (define georg-op->faust-expr
   {georg-identifier --> string}
@@ -77,8 +81,8 @@
   modulo -> "%"
   delay-one -> "mem"
   delay -> "@"
-  in-series -> "seq"
-  in-parallel -> "par"
+  series -> ":"
+  parallel -> "par"
   split -> "<:"
   merge -> ":>"
   recurse -> "~"
@@ -118,22 +122,16 @@
 
   GeorgDefs : (list georg-definition) >> P; !;
   ____________________________________________
-  GeorgDefs : georg-definition >> P;
-
-  \* GeorgDef : georg-definition; *\
-  \* GeorgDefs : (list georg-definition); *\
-  \* ==================================== *\
-  \* [GeorgDef | GeorgDefs] : georg-definition; *\
-  )
+  GeorgDefs : georg-definition >> P;)
 
 (define emit-expression
   {georg-expression --> string}
-
-  [declare Key Value] -> (make-string "declare ~A ~S;~%" Key Value)
+  [f Integer Fractional] -> (make-string "~A.~A" Integer Fractional)
+  \* [dec Key Value] -> (make-string "declare ~A ~S;~%" Key Value)  *\
 
   [p Op | Operands] -> (make-string "~A(~A)"
-                                        (georg-op->faust-expr Op)
-                                        (emit-expression* comma Operands))
+                                    (georg-op->faust-expr Op)
+                                    (emit-expression* comma Operands))
   [in Op | Operands] -> (emit-expression* Op Operands)
 
   [GeorgTerm | GeorgTerms] -> (@s (emit-expression GeorgTerm)
