@@ -4,7 +4,7 @@
 #include <fstream>
 #include "ecl-root.h"
 //IMPLEMENTATION GENERATED WITH CM-IFS
-#include "kiss.h"
+#include "georg.h"
 using namespace std;
 int elapsed = 0;
 int maxtime = 3600;

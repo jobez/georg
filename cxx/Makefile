@@ -1,4 +1,4 @@
-all: kiss
+all: georg
 
 CXX = g++
 LIBS = -lfaust -ljack  -lecl
@@ -13,9 +13,9 @@ FILES =
 	@echo "CM $<"
 	@cm-cxx -E "(require :cm-ifs)" -E '(setf cm-ifs:*gen-interface* nil)'  $< -o $@
 
-kiss: kiss.h kiss.cc faust.h faust.cc ecl-helpers.h ecl-helpers.cc ecl-root.h ecl-root.cc
+georg: georg.h georg.cc faust.h faust.cc ecl-helpers.h ecl-helpers.cc ecl-root.h ecl-root.cc
 	@echo "gcc $(shell llvm-config --ldflags --libs all) $^"
 	@$(CXX) $(LIBS) $(CFLAGS) $(FILES) $^ -o $@
 
 clean:
-	rm -f *.cc *.h kiss
+	rm -f *.cc *.h georg
