@@ -8,7 +8,7 @@
 (include <fstream>)
 (include "ecl-root.h")
 
-(with-interface (kiss)
+(with-interface (georg)
   (using-namespace std)
 
   (decl ((int elapsed = 0)
