@@ -1,9 +1,9 @@
-#include <ecl/ecl.h>
-#include <iostream>
-#include <fstream>
 #ifndef __ECL_HELPERS_H__
 #define __ECL_HELPERS_H__
 //INTERFACE GENERATED WITH CM-IFS
+#include <ecl/ecl.h>
+#include <iostream>
+#include <fstream>
 namespace ecl_helpers
 {
 

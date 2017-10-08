@@ -16,6 +16,10 @@
   _____________________
   X : georg-term;
 
+  X : string; !;
+  _______________
+  X : georg-term;
+
   X : number; !;
   _______________
   X : georg-term;)
@@ -138,7 +142,7 @@
                                   (emit-expression GeorgTerms))
 
   [] -> ""
-
+  X -> (make-string "~S" X) where (string? X)
   X -> (make-string "~A" X))
 
 (define emit-expression*
@@ -161,7 +165,7 @@
                                                Terms))))
 
 
-
+\***** import is a statement, as is declare *****\
 (define emit-definition
   {georg-definition --> string}
 

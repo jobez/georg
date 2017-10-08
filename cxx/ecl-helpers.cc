@@ -1,6 +1,3 @@
-#include <ecl/ecl.h>
-#include <iostream>
-#include <fstream>
 //IMPLEMENTATION GENERATED WITH CM-IFS
 #include "ecl-helpers.h"
 namespace ecl_helpers

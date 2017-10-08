@@ -1,14 +1,16 @@
 ; -*- mode: Lisp; eval: (cm-mode 1); -*-
 (use-package :cm-ifs)
 
-(include <ecl/ecl.h>)
-(include <iostream>)
-(include <fstream>)
-
 
 (load "helpers.lisp")
 
 (with-interface (ecl-helpers)
+
+  (include <ecl/ecl.h>)
+  (include <iostream>)
+  (include <fstream>)
+
+
   (namespace
    'ecl-helpers
 
@@ -22,7 +24,7 @@
              (< i j)
              (set i (+ i 1)))
          ;; (set str (+ str (+ selv i)))
-         (normie-syntax "str += (*(selv+i));"))
+         (inject-syntax "str += (*(selv+i));"))
        (return str)))
 
    (function call-lisp ((const #:std:string &call))

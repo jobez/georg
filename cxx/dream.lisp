@@ -32,7 +32,7 @@
 (defvar |*porters*| "Mark Tarver")
 (defvar |*shen.interactive-input*| (lambda ()))
 
-(PROCLAIM '(OPTIMIZE (DEBUG 0) (SPEED 3) (SAFETY 3)))
+(PROCLAIM '(OPTIMIZE (DEBUG 0) (SPEED 3) (SAFETY 0)))
 (DEFCONSTANT COMPILED-SUFFIX ".fas")
 (DEFCONSTANT OBJECT-SUFFIX ".o")
 (DEFCONSTANT NATIVE-PATH "./ecl/")

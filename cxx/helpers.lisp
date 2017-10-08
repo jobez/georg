@@ -68,5 +68,5 @@ It is ugly code with tremendous personality that will blossom later in life.
             ,(format nil "(compile-file \\\"~a\\\")"
                      file)))
 
-(defmacro normie-syntax (string)
+(defmacro inject-syntax (string)
   `(comment ,string :prefix ""))

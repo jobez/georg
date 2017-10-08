@@ -1,10 +1,7 @@
-#include <ecl/ecl.h>
-#include <iostream>
-#include <fstream>
-#include "faust.h"
-#include "ecl-helpers.h"
 //IMPLEMENTATION GENERATED WITH CM-IFS
 #include "ecl-root.h"
+#include "faust.h"
+#include "ecl-helpers.h"
 namespace ecl_root
 {
 

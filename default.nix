@@ -1,8 +1,7 @@
 with import <nixpkgs> {};
 let
 in stdenv.mkDerivation rec {
-  ffiPath = "${libffi.dev}/include";
-  name = "faust-riffs";
+  name = "georg";
   buildInputs = [
     ecl
     jack2Full
@@ -13,9 +12,13 @@ in stdenv.mkDerivation rec {
     pkgconfig
     boehmgc
     faust2
+    # gtk2
+    glib
+    # qt4
   ];
   shellHook = ''
 export PATH=$PATH:/home/jmsb/exps/langs/lisp/common/compilec/c-mera
 
 '';
 }
+#

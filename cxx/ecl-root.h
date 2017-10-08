@@ -1,11 +1,9 @@
-#include <ecl/ecl.h>
-#include <iostream>
-#include <fstream>
-#include "faust.h"
-#include "ecl-helpers.h"
 #ifndef __ECL_ROOT_H__
 #define __ECL_ROOT_H__
 //INTERFACE GENERATED WITH CM-IFS
+#include <ecl/ecl.h>
+#include <iostream>
+#include <fstream>
 namespace ecl_root
 {
 
