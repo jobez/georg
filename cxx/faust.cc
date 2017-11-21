@@ -9,7 +9,7 @@
 #include "ecl-helpers.h"
 namespace faust
 {
-	jackaudio_midi audio;
+	GeorgAudio audio;
 	MidiUI* midiinterface;
 	llvm_dsp_factory* dsp_factory;
 	mydsp_poly* dsp_poly = '\0';
@@ -25,8 +25,8 @@ namespace faust
 		dsp_factory = createDSPFactoryFromString("georgDSP", dsp_str, 0, 0, "", error_msg);
 		std::cerr << error_msg << std::endl;
 		std::cout << dsp_str << std::endl;
-		dsp_poly = new mydsp_poly(dsp_factory->createDSPInstance(), 6, true, 1);
-		DSP = new timed_dsp(dsp_poly);
+		dsp_poly = new mydsp_poly(dsp_factory->createDSPInstance(), 8, true, 1);
+		DSP = dsp_factory->createDSPInstance();
 	}
 
 	cl_object _ECL_STR_TO_DSP_(cl_object dsp_str)
@@ -88,6 +88,17 @@ namespace faust
 		return ecl_make_integer(0);
 	}
 
+	void update_dsp()
+	{
+		audio.updateDsp(DSP);
+	}
+
+	cl_object _ECL_UPDATE_DSP_()
+	{
+		update_dsp();
+		return ecl_make_integer(0);
+	}
+
 	void play()
 	{
 		audio.addMidiIn(dsp_poly);
@@ -113,7 +124,7 @@ namespace faust
 
 	void kill_dsp()
 	{
-		delete(DSP);
+		delete DSP;
 	}
 
 	cl_object _ECL_KILL_DSP_()
@@ -127,8 +138,8 @@ namespace faust
 		httpdinterface->stop();
 		oscinterface->stop();
 		midiinterface->stop();
-		delete(httpdinterface);
-		delete(oscinterface);
+		delete httpdinterface;
+		delete oscinterface;
 	}
 
 	cl_object _ECL_KILL_INTERFACES_()
@@ -143,6 +154,7 @@ namespace faust
 		cl_def_c_function(c_string_to_object("|ecl-kill-dsp|"), ((cl_objectfn_fixed)_ECL_KILL_DSP_), 0);
 		cl_def_c_function(c_string_to_object("|ecl-stop|"), ((cl_objectfn_fixed)_ECL_STOP_), 0);
 		cl_def_c_function(c_string_to_object("|ecl-play|"), ((cl_objectfn_fixed)_ECL_PLAY_), 0);
+		cl_def_c_function(c_string_to_object("|ecl-update-dsp|"), ((cl_objectfn_fixed)_ECL_UPDATE_DSP_), 0);
 		cl_def_c_function(c_string_to_object("|ecl-connect-dsp|"), ((cl_objectfn_fixed)_ECL_CONNECT_DSP_), 0);
 		cl_def_c_function(c_string_to_object("|ecl-build-interfaces|"), ((cl_objectfn_fixed)_ECL_BUILD_INTERFACES_), 0);
 		cl_def_c_function(c_string_to_object("|ecl-init-jack|"), ((cl_objectfn_fixed)_ECL_INIT_JACK_), 0);

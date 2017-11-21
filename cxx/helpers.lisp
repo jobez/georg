@@ -9,6 +9,8 @@ It is ugly code with tremendous personality that will blossom later in life.
 
 |#
 
+(defmacro cprint (msg)
+  `(<< #:std::cout ,msg #:std::endl))
 
 (defvar *ecl-wrapper-exprs* nil)
 

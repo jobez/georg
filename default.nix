@@ -11,6 +11,7 @@ in stdenv.mkDerivation rec {
     alsaLib
     pkgconfig
     boehmgc
+    rtmidi
     faust2
     # gtk2
     glib

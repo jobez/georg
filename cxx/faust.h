@@ -6,7 +6,7 @@
 #include <faust/dsp/llvm-dsp.h>
 #include <faust/dsp/poly-dsp.h>
 #include <faust/dsp/dsp-combiner.h>
-#include <faust/audio/jack-dsp.h>
+#include "audio.h"
 namespace faust
 {
 

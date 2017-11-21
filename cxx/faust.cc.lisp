@@ -17,7 +17,7 @@
    (include <faust/dsp/llvm-dsp.h>)
    (include <faust/dsp/poly-dsp.h>)
    (include <faust/dsp/dsp-combiner.h>)
-   (include <faust/audio/jack-dsp.h>))
+   (include "audio.h"))
 
   (implementation-only
    ;; (include <faust/gui/faustgtk.h>)
@@ -34,7 +34,7 @@
   (namespace
    'faust
    (implementation-only
-    (decl ((jackaudio_midi audio)
+    (decl ((GeorgAudio audio)
            (MidiUI* midiinterface)
            (llvm_dsp_factory*
             dsp-factory)
@@ -63,8 +63,10 @@
          (<< #:std::cout dsp-str #:std::endl)
 
          (set dsp_poly (new (mydsp_poly (dsp-factory->createDSPInstance) 8 true 1)))
-         (set DSP (new (timed_dsp
-                        dsp_poly)))
+         ;; (set DSP (new (timed_dsp
+         ;;                dsp_poly)))
+
+         (set DSP (dsp-factory->createDSPInstance))
 
          )))
 
@@ -117,6 +119,11 @@
      (function connect-dsp ()
          -> void
        (audio.setDsp DSP)))
+
+    (gen-ecl-wrapper
+     (function update-dsp ()
+         -> void
+       (audio.updateDsp DSP)))
 
     (gen-ecl-wrapper
      (function play ()

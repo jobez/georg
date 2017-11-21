@@ -13,7 +13,7 @@ FILES =
 	@echo "CM $<"
 	@cm-cxx -E "(require :cm-ifs)" -E '(setf cm-ifs:*gen-interface* nil)'  $< -o $@
 
-georg: georg.h georg.cc ecl-helpers.h ecl-helpers.cc ecl-root.h ecl-root.cc faust.h faust.cc
+georg: georg.h georg.cc ecl-helpers.h ecl-helpers.cc ecl-root.h ecl-root.cc faust.h faust.cc audio.h audio.cc
 	$(CXX)  $^ $(CFLAGS) $(LIBS) $(FILES) -o $@
 
 clean:
